@@ -1,8 +1,11 @@
 import { MessageSquareText } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BUSINESS_INFO } from '../data';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function WhatsAppButton() {
+  const { language } = useLanguage();
+
   return (
     <div className="fixed bottom-6 right-6 z-40" id="whatsapp-floating-panel">
       <motion.a
@@ -16,8 +19,8 @@ export default function WhatsAppButton() {
         id="floating-whatsapp-anchor"
       >
         <MessageSquareText className="w-6 h-6 animate-pulse text-white" />
-        <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-out font-bold text-xs sm:text-sm text-emerald-50 shrink-0 select-none">
-          Enquire on WhatsApp
+        <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-out font-bold text-xs sm:text-sm text-emerald-50 shrink-0 select-none font-sans">
+          {language === 'ta' ? 'வாட்ஸ்அப்பில் பேச' : 'Enquire on WhatsApp'}
         </span>
       </motion.a>
     </div>

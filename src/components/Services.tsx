@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { SERVICES, BUSINESS_INFO } from '../data';
 import { ServiceItem } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ServicesProps {
   onSelectServiceForEnquiry: (serviceTitle: string) => void;
@@ -25,6 +26,7 @@ interface ServicesProps {
 
 export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
   const [filterCategory, setFilterCategory] = useState<'all' | 'agriculture' | 'decoration'>('all');
+  const { language, t } = useLanguage();
 
   const filteredServices = SERVICES.filter(service => {
     if (filterCategory === 'all') return true;
@@ -56,13 +58,13 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-800 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-md mb-3 inline-block">
-            ACTIVE REGIONAL OFFERINGS
+            {language === 'ta' ? 'அதிநவீன சேவைப் பிரிவுகள்' : 'ACTIVE REGIONAL OFFERINGS'}
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
-            Professional Agriculture Fleet & Decoration Packages
+            {t('services.title')}
           </h2>
           <p className="text-slate-600 mt-4 text-sm sm:text-base leading-relaxed">
-            Providing Salem farmers, local village organizers, and temple committees with affordable, highly efficient land tilling patterns and traditional Tamil festivity setups.
+            {t('services.description')}
           </p>
         </div>
 
@@ -76,7 +78,7 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                 : 'bg-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
-            All ({SERVICES.length})
+            {language === 'ta' ? 'அனைத்தும்' : 'All'} ({SERVICES.length})
           </button>
           
           <button
@@ -87,8 +89,8 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                 : 'bg-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Tractor className="w-4 h-4" />
-            <span>Agriculture ({SERVICES.filter(s => s.category === 'agriculture').length})</span>
+            <Tractor className="w-4 h-4 shrink-0" />
+            <span>{language === 'ta' ? 'விவசாய உழவுவண்டி' : 'Agriculture'} ({SERVICES.filter(s => s.category === 'agriculture').length})</span>
           </button>
 
           <button
@@ -99,8 +101,8 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                 : 'bg-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Palette className="w-4 h-4" />
-            <span>Traditional Decor ({SERVICES.filter(s => s.category === 'decoration').length})</span>
+            <Palette className="w-4 h-4 shrink-0" />
+            <span>{language === 'ta' ? 'விழா அலங்காரம்' : 'Traditional Decor'} ({SERVICES.filter(s => s.category === 'decoration').length})</span>
           </button>
         </div>
 
@@ -123,7 +125,7 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                 id={`service-card-${service.id}`}
               >
                 {/* Card Main Body */}
-                <div className="p-8 flex flex-col flex-grow">
+                <div className="p-8 flex flex-col flex-grow text-left">
                   {/* Category, Icon & Popular tag */}
                   <div className="flex justify-between items-start mb-6">
                     <div className={`p-3.5 rounded-xl ${
@@ -139,7 +141,7 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                           ? 'bg-emerald-50/50 text-emerald-800 border-emerald-100'
                           : 'bg-orange-50 text-orange-700 border-orange-100'
                       }`}>
-                        {service.tag}
+                        {language === 'ta' && service.tagTa ? service.tagTa : service.tag}
                       </span>
                     )}
                   </div>
@@ -147,20 +149,24 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                   {/* Title & Description */}
                   <div className="space-y-2">
                     <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-widest">
-                      {service.category === 'agriculture' ? 'AGRICULTURE ENGINE' : 'TAMIL DECORATION'}
+                      {service.category === 'agriculture' 
+                        ? (language === 'ta' ? 'விவசாய உழவுவண்டி' : 'AGRICULTURE ENGINE') 
+                        : (language === 'ta' ? 'பாரம்பரிய அலங்காரம்' : 'TAMIL DECORATION')}
                     </span>
-                    <h3 className="text-lg font-bold tracking-tight text-slate-900">
-                      {service.title}
+                    <h3 className="text-lg font-bold tracking-tight text-slate-900 leading-tight">
+                      {language === 'ta' && service.titleTa ? service.titleTa : service.title}
                     </h3>
-                    <p className="text-xs text-slate-500 leading-relaxed min-h-[3rem]">
-                      {service.description}
+                    <p className="text-xs text-slate-500 leading-relaxed min-h-[3rem] font-sans">
+                      {language === 'ta' && service.descriptionTa ? service.descriptionTa : service.description}
                     </p>
                   </div>
 
                   {/* Bullet points mapping */}
                   <div className="mt-6 pt-5 border-t border-slate-100 space-y-3 flex-grow">
-                    <p className="text-[9px] uppercase font-bold tracking-widest text-slate-400">Key Features</p>
-                    {service.features.map((feat, index) => (
+                    <p className="text-[9px] uppercase font-bold tracking-widest text-slate-400">
+                      {language === 'ta' ? 'முக்கிய சிறப்புகள்' : 'Key Features'}
+                    </p>
+                    {((language === 'ta' && service.featuresTa) ? service.featuresTa : service.features).map((feat, index) => (
                       <div key={index} className="flex items-start space-x-2 text-xs text-slate-700">
                         <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 ${
                           service.category === 'agriculture' ? 'text-emerald-700' : 'text-brand-brown-600'
@@ -174,7 +180,7 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                   <div className="mt-8 pt-4 flex items-center justify-between gap-3 border-t border-slate-100">
                     <a
                       href={`tel:${BUSINESS_INFO.phone}`}
-                      className="p-3 rounded-xl border border-slate-200 text-slate-500 hover:text-emerald-700 hover:border-emerald-600 transition flex items-center justify-center"
+                      className="p-3 rounded-xl border border-slate-200 text-slate-500 hover:text-emerald-700 hover:border-emerald-600 transition flex items-center justify-center shrink-0"
                       title="Quick Call Now"
                     >
                       <Phone className="w-4 h-4" />
@@ -189,8 +195,8 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                       }`}
                       id={`book-service-${service.id}-btn`}
                     >
-                      <Bookmark className="w-4 h-4" />
-                      <span>Instantly Enquire</span>
+                      <Bookmark className="w-4 h-4 shrink-0" />
+                      <span>{language === 'ta' ? 'முன்பதிவு செய்ய' : 'Instantly Enquire'}</span>
                     </button>
                   </div>
                 </div>
@@ -205,13 +211,15 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4 text-left">
               <span className="bg-orange-500/10 text-orange-400 text-[10px] font-bold uppercase px-3 py-1 rounded inline-block border border-orange-500/20">
-                🚜 heavy duty fleet highlight
+                {language === 'ta' ? '🚜 எமது கனரக வாகனப் பிரிவு' : '🚜 heavy duty fleet highlight'}
               </span>
               <h3 className="text-xl sm:text-3xl font-extrabold tracking-tight">
-                Need Farm Levelling or Excavation? Our JCB TN 88 H 8077 is Ready!
+                {language === 'ta' ? 'விவசாய நிலம் சமப்படுத்த வேண்டுமா? எமது JCB (TN 88 H 8077) தயார் நிலையில் உள்ளது!' : 'Need Farm Levelling or Excavation? Our JCB TN 88 H 8077 is Ready!'}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-                Whether you need to dig irrigation pits, clear thick invasive thorns, level undulating land, or load tilling soil, our high-power JCB earthmover is positioned near Mallur for quick service dispatch.
+              <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed font-sans">
+                {language === 'ta' 
+                  ? 'விவசாய வாய்க்கால் தோண்டவும், தோப்பில் உள்ள முட்செடிகள், காட்டாமணக்கு போன்ற தேவையற்ற தாவரங்களை வேருடன் அகற்றவும், நிலங்களை மிகச் சரியாகவும் நேர்த்தியாகவும் சமப்படுத்தவும், எங்களது அதிக திறன் கொண்ட JCB எந்திரங்கள் மல்லூர் மற்றும் சுற்றுவட்டாரப் பகுதிகளுக்கு உடனடியாக வரத் தயாராக உள்ளன.' 
+                  : 'Whether you need to dig irrigation pits, clear thick invasive thorns, level undulating land, or load tilling soil, our high-power JCB earthmover is positioned near Mallur for quick service dispatch.'}
               </p>
             </div>
             <div className="lg:col-span-4 flex flex-col sm:flex-row gap-4 lg:justify-end">
@@ -219,13 +227,13 @@ export default function Services({ onSelectServiceForEnquiry }: ServicesProps) {
                 href={`tel:${BUSINESS_INFO.phone}`}
                 className="bg-white text-slate-900 font-extrabold px-6 py-3.5 rounded-xl hover:bg-slate-100 transition shadow text-center text-sm"
               >
-                Call: {BUSINESS_INFO.phoneDisplay}
+                {language === 'ta' ? 'விளக்கத்திற்கு: ' : 'Call: '}{BUSINESS_INFO.phoneDisplay}
               </a>
               <button
                 onClick={() => onSelectServiceForEnquiry("JCB Earth Movers Available")}
                 className="bg-emerald-800 text-white font-extrabold px-6 py-3.5 rounded-xl hover:bg-emerald-750 transition border border-emerald-700 text-center text-sm shadow-sm"
               >
-                Book JCB Mover
+                {language === 'ta' ? 'ஜேசிபி பதிவு செய்ய' : 'Book JCB Mover'}
               </button>
             </div>
           </div>

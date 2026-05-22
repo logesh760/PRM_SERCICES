@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Focus, Eye, CheckCircle } from 'lucide-react';
 import { GALLERY } from '../data';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Gallery() {
   const [filterCategory, setFilterCategory] = useState<'all' | 'agriculture' | 'decoration'>('all');
   const [activeImageId, setActiveImageId] = useState<string | null>(null);
+  const { language, t } = useLanguage();
 
   const filteredGallery = GALLERY.filter(item => {
     if (filterCategory === 'all') return true;
@@ -20,13 +22,13 @@ export default function Gallery() {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-800 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-md mb-3 inline-block">
-            AUTHENTIC LOCAL PORTFOLIO
+            {language === 'ta' ? 'உண்மைப் புகைப்படத் தொகுப்பு' : 'AUTHENTIC LOCAL PORTFOLIO'}
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
-            Real Fields, Real Traditional setups
+            {t('gallery.title')}
           </h2>
-          <p className="text-slate-600 mt-4 text-sm sm:text-base leading-relaxed">
-            Unfiltered images showing our fleet preparing tilling patterns in local coconut farms across Mallur with robust Sonalika models, and budget event setups built to perfection.
+          <p className="text-slate-600 mt-4 text-sm sm:text-base leading-relaxed font-sans">
+            {t('gallery.description')}
           </p>
         </div>
 
@@ -40,7 +42,7 @@ export default function Gallery() {
                 : 'bg-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
-            All Items
+            {language === 'ta' ? 'அனைத்தும்' : 'All Items'}
           </button>
           <button
             onClick={() => setFilterCategory('agriculture')}
@@ -50,7 +52,7 @@ export default function Gallery() {
                 : 'bg-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
-            Agri Tractor
+            {language === 'ta' ? 'டிராக்டர் உழவு' : 'Agri Tractor'}
           </button>
           <button
             onClick={() => setFilterCategory('decoration')}
@@ -60,7 +62,7 @@ export default function Gallery() {
                 : 'bg-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
-            Decor Setup
+            {language === 'ta' ? 'விழா அலங்காரம்' : 'Decor Setup'}
           </button>
         </div>
 
@@ -86,7 +88,7 @@ export default function Gallery() {
                 {/* Photo Element */}
                 <img
                   src={item.imageUrl}
-                  alt={item.title}
+                  alt={language === 'ta' && item.titleTa ? item.titleTa : item.title}
                   loading="lazy"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
@@ -103,7 +105,9 @@ export default function Gallery() {
                         ? 'bg-emerald-500/20 text-emerald-100 border-emerald-500/30'
                         : 'bg-orange-500/20 text-orange-200 border-orange-500/30'
                     }`}>
-                      {item.category === 'agriculture' ? '🌾 Tractor' : '🌸 Decor'}
+                      {item.category === 'agriculture' 
+                        ? (language === 'ta' ? '🌾 டிராக்டர்' : '🌾 Tractor') 
+                        : (language === 'ta' ? '🌸 அலங்காரம்' : '🌸 Decor')}
                     </span>
                     <div className="p-1 bg-white/10 backdrop-blur-sm rounded opacity-0 group-hover:opacity-100 transition">
                       <Eye className="w-3.5 h-3.5 text-white" />
@@ -111,11 +115,11 @@ export default function Gallery() {
                   </div>
 
                   <h4 className="font-bold text-base tracking-tight text-white line-clamp-1">
-                    {item.title}
+                    {language === 'ta' && item.titleTa ? item.titleTa : item.title}
                   </h4>
                   
-                  <p className="text-xs text-slate-300 mt-1 line-clamp-2 leading-relaxed">
-                    {item.description}
+                  <p className="text-xs text-slate-300 mt-1 line-clamp-2 leading-relaxed font-sans">
+                    {language === 'ta' && item.descriptionTa ? item.descriptionTa : item.description}
                   </p>
                 </div>
               </motion.div>
@@ -123,7 +127,7 @@ export default function Gallery() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Large Image Fullscreen lightbox (Optional usability addition, highly professional) */}
+        {/* Large Image Fullscreen lightbox */}
         <AnimatePresence>
           {activeImageId && (
             <motion.div
@@ -131,14 +135,14 @@ export default function Gallery() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setActiveImageId(null)}
-              className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+              className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 shadow-2xl"
               id="lightbox-container"
             >
               <button
                 onClick={() => setActiveImageId(null)}
                 className="absolute top-4 right-4 bg-white/15 hover:bg-white/30 text-white text-xs uppercase px-4 py-2.5 rounded-full font-bold transition"
               >
-                ✕ Close Preview
+                {language === 'ta' ? '✕ மூடுக' : '✕ Close Preview'}
               </button>
               
               {(() => {
@@ -155,15 +159,23 @@ export default function Gallery() {
                     <div className="aspect-16/9 w-full">
                       <img
                         src={item.imageUrl}
-                        alt={item.title}
+                        alt={language === 'ta' && item.titleTa ? item.titleTa : item.title}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="p-6 text-white text-left">
-                      <span className="text-xs text-brand-brown-500 uppercase font-bold">{item.category}</span>
-                      <h4 className="text-xl font-bold mt-1 text-white">{item.title}</h4>
-                      <p className="text-sm text-gray-300 mt-2">{item.description}</p>
+                    <div className="p-6 text-white text-left font-sans">
+                      <span className="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">
+                        {item.category === 'agriculture' 
+                          ? (language === 'ta' ? 'விவசாய உழவுவண்டி' : 'agriculture') 
+                          : (language === 'ta' ? 'பாரம்பரிய அலங்காரம்' : 'decoration')}
+                      </span>
+                      <h4 className="text-lg sm:text-xl font-bold mt-1 text-white">
+                        {language === 'ta' && item.titleTa ? item.titleTa : item.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-gray-300 mt-2 leading-relaxed">
+                        {language === 'ta' && item.descriptionTa ? item.descriptionTa : item.description}
+                      </p>
                     </div>
                   </motion.div>
                 );
