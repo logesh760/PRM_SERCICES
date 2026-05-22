@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-brand-green-50: #f0fdf4;
+  --color-brand-green-100: #dcfce7;
+  --color-brand-green-600: #047857;
+  --color-brand-green-700: #065f46;
+  --color-brand-green-800: #064e3b;
+  
+  --color-brand-brown-100: #fcf8f2;
+  --color-brand-brown-500: #a27b5c;
+  --color-brand-brown-600: #845f44;
+  --color-brand-brown-700: #63442f;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: var(--font-sans);
+    background-color: #f8fafc; /* bg-slate-50 */
+    color: #0f172a; /* text-slate-900 */
+  }
+}
+
+/* Custom premium styles */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 45%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 55%
+  );
+  transform: rotate(45deg);
+  transition: transform 0.5s ease;
+}
+
+.card-shine:hover::after {
+  transform: translate(50%, 50%) rotate(45deg);
+}
